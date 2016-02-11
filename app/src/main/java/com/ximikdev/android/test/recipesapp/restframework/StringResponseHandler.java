@@ -1,9 +1,5 @@
 package com.ximikdev.android.test.recipesapp.restframework;
 
-import android.util.Log;
-
-import com.ximikdev.android.test.recipesapp.provider.F2FContentProvider;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +10,13 @@ import java.net.URL;
  */
 public class StringResponseHandler implements URLResponseHandler<String> {
 
+    /**
+     * Opens URL stream, reads data as symbols and save it to String
+     * @param url request URL
+     * @return result String
+     * @throws IOException
+     * @see URLResponseHandler#handleResponse(URL)
+     */
     @Override
     public String handleResponse(URL url) throws IOException {
 

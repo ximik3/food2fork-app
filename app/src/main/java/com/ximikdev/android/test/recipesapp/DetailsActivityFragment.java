@@ -1,12 +1,12 @@
 package com.ximikdev.android.test.recipesapp;
 
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +41,11 @@ public class DetailsActivityFragment extends Fragment implements
     public DetailsActivityFragment() {
     }
 
+    /**
+     * Creates new instance of fragment as it is recommended to have empty franment constructor
+     * @param bundle initialization arguments
+     * @return new fragment
+     */
     public static DetailsActivityFragment newInstance(Bundle bundle) {
         DetailsActivityFragment fragment = new DetailsActivityFragment();
         fragment.setArguments(bundle);
@@ -51,6 +56,7 @@ public class DetailsActivityFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Get recipe_id from Bundle
         if (savedInstanceState == null) { savedInstanceState = getArguments(); }
         if (savedInstanceState != null) {
             recipe_id = savedInstanceState.getString(MainActivity.RECIPE_ID);
@@ -63,6 +69,10 @@ public class DetailsActivityFragment extends Fragment implements
     }
 
 
+    /**
+     * Initialize views
+     * @see Fragment#onCreateView(LayoutInflater, ViewGroup, Bundle)
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,12 +86,21 @@ public class DetailsActivityFragment extends Fragment implements
         return view;
     }
 
+    /**
+     * Save current 'recipe_id' to outState bundle
+     * @param outState
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(MainActivity.RECIPE_ID, recipe_id);
         super.onSaveInstanceState(outState);
     }
 
+    //region Loader
+
+    /**
+     * Loads data from Uri to Cursor in background
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.i(_TAG, "Loader " + id + " started");
@@ -96,6 +115,11 @@ public class DetailsActivityFragment extends Fragment implements
                 null, null, null);
     }
 
+    /**
+     * Set loaded data to views
+     * @param loader
+     * @param data loaded cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.i(_TAG, data != null ? "cursor ok" : "null cursor");
@@ -134,9 +158,8 @@ public class DetailsActivityFragment extends Fragment implements
             sourceUrl.append(sData.get(data.getColumnIndex(F2FTable.SOURCE_URL)));
         }
     }
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
+    //endregion
 }

@@ -36,7 +36,12 @@ public class F2FUri {
     private final String rId;
     private final int page;
 
-    // Constructors
+    //region Constructors
+
+    /**
+     * Creates instance of F2FUri class from Uri
+     * @param uri input Uri
+     */
     public F2FUri(Uri uri) {
         this.uri = uri;
         action = uri.getLastPathSegment();
@@ -52,7 +57,12 @@ public class F2FUri {
                 0 : parseInt(uri.getQueryParameters(PAGE).get(0));
     }
 
-    private int parseInt(String page) {
+    /**
+     * Constructor helper. No exception String to int conversion
+     * @param page numeric String
+     * @return int
+     */
+    private static int parseInt(String page) {
         try {
             return Integer.parseInt(page);
         } catch (NumberFormatException e) {
@@ -60,11 +70,15 @@ public class F2FUri {
         }
     }
 
+    /**
+     * Creates instance of F2FUri class from String
+     * @param uri input String
+     */
     public F2FUri(String uri) {
         this(Uri.parse(uri));
     }
 
-    // Getters
+    //region Getters
     public Uri getUri() {
         return uri;
     }
@@ -95,9 +109,9 @@ public class F2FUri {
     public int getPage() {
         return page;
     }
+    //endregion
 
-
-    // Checkers
+    //region Checkers
     public boolean hasKey() {
         return !key.isEmpty();
     }
@@ -117,9 +131,9 @@ public class F2FUri {
     public boolean hasPage() {
         return page > 0;
     }
+    //endregion
 
-
-    // Parsers
+    //region Parsers
     public static F2FUri parse(Uri uri) {
         return new F2FUri(uri);
     }
@@ -127,7 +141,7 @@ public class F2FUri {
     public static F2FUri parse(String uri) {
         return new F2FUri(uri);
     }
-
+    //endregion
 
     @Override
     public String toString() {

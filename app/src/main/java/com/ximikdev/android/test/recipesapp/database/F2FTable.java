@@ -31,7 +31,7 @@ public class F2FTable implements BaseColumns {
     // Indexes to sort search results
     public static final String Q_RATING_POSITION = "q_rating_pos";
     public static final String Q_TRENDING_POSITION = "q_trending_pos";
-    // Top rated and top trending numbers (20 per page)
+    // Top rated and top trending numbers
     public static final String RATING_POSITION = "rating_pos";
     public static final String TRENDING_POSITION = "trending_pos";
     // Image Uri to local images cache

@@ -2,12 +2,8 @@ package com.ximikdev.android.test.recipesapp.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import com.ximikdev.android.test.recipesapp.provider.F2FContentProvider;
 
 /**
  * Custom F2F DB insert class
@@ -18,6 +14,9 @@ public class F2FInsertScheduler extends InsertDBScheduler {
         super(database, listener);
     }
 
+    /**
+     * @see InsertDBScheduler#insertValues(ContentValues)
+     */
     @Override
     protected boolean insertValues(ContentValues values) {
         long affected;

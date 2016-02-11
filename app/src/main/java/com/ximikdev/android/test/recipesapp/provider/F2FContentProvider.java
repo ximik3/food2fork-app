@@ -88,7 +88,7 @@ public class F2FContentProvider extends RESTContentProvider implements
     }
     //endregion
 
-    // Main
+    // Main values
     SQLiteOpenHelper database;
     InsertDBScheduler insertScheduler;
     F2FJsonHandler jsonHandler;
@@ -110,6 +110,11 @@ public class F2FContentProvider extends RESTContentProvider implements
     }
 
 
+    /**
+     * URL response listener
+     * @param url requested URL
+     * @param response generic type URL response
+     */
     @Override
     public void onRequestComplete(URL url, Object response) {
         super.onRequestComplete(url, response);
@@ -118,7 +123,7 @@ public class F2FContentProvider extends RESTContentProvider implements
             Log.w(_TAG, "Empty response caught from: " + url);
             return;
         }
-
+        // Retrieve query from URL
         Uri uri = F2FUriHolder.UrlToUri(
                 url.toString(),
                 URL_API_BASE,
@@ -134,27 +139,47 @@ public class F2FContentProvider extends RESTContentProvider implements
                 break;
             default:
                 // Response from StreamResponseHandler (File)
-                insertImageUriIntoDb(url, (File)response);
-                getContext().getContentResolver().notifyChange(SEARCH_URI, null);
+                insertImageUriIntoDb(url, (File) response);
                 break;
         }
     }
 
+    /**
+     * URL response listener helper method
+     * @param url image URL
+     * @param response downloaded file instance
+     */
     private void insertImageUriIntoDb(URL url, File response) {
         ContentValues values = new ContentValues();
-        Log.d(_TAG, response.toURI().toString());
+//        Log.d(_TAG, response.toURI().toString());
         values.put(F2FTable.IMAGE_URI, response.toURI().toString());
         database.getWritableDatabase().update(F2FTable.NAME, values,
                 F2FTable.IMAGE_URL + "=?", new String[]{url.toString()});
-//        getContext().getContentResolver().notifyChange(SEARCH_URI, null);
+        getContext().getContentResolver().notifyChange(SEARCH_URI, null);
     }
 
+    /**
+     * Insertion complete listener
+     * @param rowsAffected number of inserted and/or updated rows
+     */
     @Override
     public void onInsertionCompete(int rowsAffected) {
         Log.i(_TAG, rowsAffected + " rows affected");
         getContext().getContentResolver().notifyChange(notifyUriOnComplete, null);
     }
 
+    /**
+     * Main REST query. All requests are handled here. Firstly it is looking for
+     * data in database. All results returned via {@link Cursor}. Than if network is available
+     * it is downloading newer results and storing them to database. When request is completed
+     * it is sending notification to {@link Cursor}, and force it to update its data.
+     * @param uri generic request Uri with query parameters, similar to REST URL.
+     * @param projection requested columns, null to return all available
+     * @param selection requested condition, can be null
+     * @param selectionArgs condition arguments, null if not specified in selection by '?' symbols
+     * @param sortOrder sorting order, null if default
+     * @return cursor table filled with data
+     */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
@@ -177,7 +202,9 @@ public class F2FContentProvider extends RESTContentProvider implements
             );
         }
 
+        // Analyse Uri
         switch (sURIMatcher.match(uri)) {
+            // If GET query select row with requested 'rId'
             case GET_CASE:
                 if (fUri.hasRid()) {
                     c = db.query(
@@ -190,6 +217,8 @@ public class F2FContentProvider extends RESTContentProvider implements
                             + "in GET Uri: " + uri);
                 }
                 break;
+            // If SEARCH check for 'q' words, and return matching results. When 'q' is
+            // not specified it is a special case and it has two own sorting columns.
             case SEARCH_CASE:
                 if (fUri.hasQ()) {
                     c = db.query(
@@ -238,6 +267,8 @@ public class F2FContentProvider extends RESTContentProvider implements
             } else {
                 // Check F2FTable.MODIFIED and F2FTable.INGREDIENTS fields
                 try {
+                    // Build _id range (e.g. (2,4,5,11)) for SQLs 'IN' selection method
+                    // from database data matching current request
                     StringBuilder inRange = new StringBuilder();
                     inRange.append('(');
                     for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -245,13 +276,13 @@ public class F2FContentProvider extends RESTContentProvider implements
                         inRange.append(',');
                     }
                     inRange.deleteCharAt(inRange.length()-1);   //delete last comma
-                    inRange.append(')');
-                    String range = inRange.toString();  //form normal range e.g. (2,5,11,12)
+                    inRange.append(')');    //add closing bracket
+                    String range = inRange.toString();
                     Cursor m = db.query(F2FTable.NAME,
                             new String[]{F2FTable._ID, F2FTable.MODIFIED, F2FTable.INGREDIENTS},
-                            F2FTable._ID + " in " + range,
+                            F2FTable._ID + " IN " + range,
                             null, null, null, null);
-
+                    // Check 'modified' timestamp field for every _id in range
                     for (m.moveToFirst(); !m.isAfterLast(); m.moveToNext()) {
                         Timestamp time = Timestamp.valueOf(
                                 m.getString(m.getColumnIndex(F2FTable.MODIFIED)));
@@ -275,7 +306,7 @@ public class F2FContentProvider extends RESTContentProvider implements
                 }
             }
 
-            Log.d(_TAG, "need update: " + needToUpdate);
+//            Log.d(_TAG, "need update: " + needToUpdate);
 
             // Update if results is older than UPDATE_TIME_MS
             if (needToUpdate) {
@@ -305,6 +336,13 @@ public class F2FContentProvider extends RESTContentProvider implements
         return c;
     }
 
+    /**
+     * Query method helper function. It checks difference between last data modification
+     * and current time.
+     * @param modified last modification time in ms since Jan, 1970
+     * @param updateTimeMs update interval
+     * @return
+     */
     private boolean needUpdate(long modified, long updateTimeMs) {
         long offset = new Date().getTime() - modified
                 - TimeZone.getDefault().getOffset(modified);
@@ -312,17 +350,21 @@ public class F2FContentProvider extends RESTContentProvider implements
         return offset > updateTimeMs;
     }
 
+    /**
+     * Internet access checker
+     * @return true if internet connection is established
+     */
     private boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return netInfo != null && netInfo.isConnected();
     }
 
+    /**
+     * Images checker. Looking for IMAGE_URI missing fields and download data
+     * @param db database to search in
+     */
     private void loadImagesIfMissing(SQLiteDatabase db) {
         // Select IMAGE_URL fields where IMAGE_URI is not specified
         Cursor imageUris = db.query(F2FTable.NAME,
@@ -332,7 +374,7 @@ public class F2FContentProvider extends RESTContentProvider implements
             for (imageUris.moveToFirst(); !imageUris.isAfterLast(); imageUris.moveToNext()) {
                 try {
                     URL url = new URL(imageUris.getString(0));
-                    asyncRequest(url, imagesHandler, this);
+                    asyncRequest(url, imagesHandler, this); //download missing
                 } catch (MalformedURLException e) {
                     Log.e(_TAG, e.toString());
                 }
@@ -341,21 +383,6 @@ public class F2FContentProvider extends RESTContentProvider implements
         imageUris.close();
     }
 
-    @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        throw new UnsupportedOperationException("Not allowed!");
-    }
-
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     public String getType(Uri uri) {
@@ -364,6 +391,22 @@ public class F2FContentProvider extends RESTContentProvider implements
             case GET_CASE:      return RECIPE_ITEM_TYPE;
             default:            return null;
         }
+    }
+
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String selection,
+                      String[] selectionArgs) {
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
 }

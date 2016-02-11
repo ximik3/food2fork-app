@@ -22,10 +22,21 @@ import java.util.List;
 public class F2FJsonHandler implements URLResponseHandler<List<ContentValues>> {
     private StringResponseHandler stringHandler;
 
+    /**
+     * Create an instance of F2FImageHandler
+     * @param stringHandler String handler
+     * @see StringResponseHandler
+     */
     public F2FJsonHandler(StringResponseHandler stringHandler) {
         this.stringHandler = stringHandler;
     }
 
+    /**
+     * Handle JSON request
+     * @param url requested JSON URL
+     * @return List of parsed JSON data
+     * @throws IOException
+     */
     @Override
     public List<ContentValues> handleResponse(URL url) throws IOException {
         String jsonString = stringHandler.handleResponse(url);

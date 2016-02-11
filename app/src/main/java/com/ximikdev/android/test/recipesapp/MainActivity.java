@@ -5,27 +5,20 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -40,7 +33,17 @@ import com.ximikdev.android.test.recipesapp.provider.F2FUri;
 import com.ximikdev.android.test.recipesapp.provider.F2FUriHolder;
 
 /**
- * Main activity with ListView to show recipes list
+ * Food2Fork Recipes App is made on REST interaction pattern B modification
+ * presented on Google I/O 2010. The idea is to connect to RESTful web services
+ * via {@link android.content.ContentProvider} API, as they has similar CRUD interface.
+ *
+ * <p><b>Activity</b> -- <b>ContentProvider</b> -- <b>REST Web Service</b></p>
+ *
+ * Activity send queries to ContentProvider and get data available in database.
+ * ContentProvider starts background service, update database with new data and
+ * notify cursors when new data is available
+ * <br/>
+ * This is main launcher Activity with ListView to show recipes
  */
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -126,8 +129,6 @@ public class MainActivity extends AppCompatActivity implements
         });
         //endregion
 
-        Log.d(_TAG, "onCreate");
-        Log.d(_TAG, "savedState " + (savedInstanceState != null));
         // Default uri. (all recipes, trending sorting)
         queryUri = new F2FUriHolder(F2FUri.parse(F2FContentProvider.SEARCH_URI));
         queryUri.setKey(F2FContentProvider.DEFAULT_API_KEY);
@@ -196,21 +197,30 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     //region loader
+
+    /**
+     * Initialize new loader to load {@link Cursor} data
+     * @param id loader id
+     * @param uri request Uri
+     */
     private void initLoader(int id, String uri) {
         Bundle bundle = new Bundle();
         bundle.putString(QUERY_URI, uri);
         getLoaderManager().initLoader(id, bundle, this);
     }
 
+    /**
+     * Restart previously initialized loader to load new data
+     * @param id loader id
+     * @param uri new request Uri
+     */
     private void restartLoader(int id, String uri) {
         Bundle bundle = new Bundle();
         bundle.putString(QUERY_URI, uri);
         getLoaderManager().restartLoader(id, bundle, this);
     }
 
-    /**
-     * Creates a new loader after the initLoader () call
-     */
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.w(MainActivity.class.getSimpleName(), "loader " + id + " created");
@@ -228,13 +238,11 @@ public class MainActivity extends AppCompatActivity implements
                 F2FTable.IMAGE_URI},
                 null, null, null);
     }
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // set new cursor after loading
         adapter.changeCursor(data);
     }
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // data is not available anymore, delete reference
@@ -251,6 +259,9 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * Reload data if sorting order changed
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

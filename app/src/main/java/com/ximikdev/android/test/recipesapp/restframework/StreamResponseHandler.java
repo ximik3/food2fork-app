@@ -1,9 +1,5 @@
 package com.ximikdev.android.test.recipesapp.restframework;
 
-import android.util.Log;
-
-import com.ximikdev.android.test.recipesapp.provider.F2FContentProvider;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,11 +16,23 @@ public class StreamResponseHandler implements URLResponseHandler<File> {
     private File mCacheDir;
     private String mFileName;    // cache file name
 
+    /**
+     * Creates handler that save URL input stream into file
+     * @param cacheDir file directory
+     * @param fileName filename where to save request
+     */
     public StreamResponseHandler(File cacheDir, String fileName) {
         mFileName = fileName;
         mCacheDir = cacheDir;
     }
 
+    /**
+     * Opens URL stream and save binary data to file.
+     * @param url request URL
+     * @return file which contain request
+     * @throws IOException
+     * @see URLResponseHandler#handleResponse(URL)
+     */
     @Override
     public File handleResponse(URL url) throws IOException {
 

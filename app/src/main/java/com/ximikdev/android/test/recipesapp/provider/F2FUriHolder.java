@@ -25,7 +25,7 @@ public class F2FUriHolder {
     private String base;
     private String action;
 
-    Map<String, String> args = new HashMap<>();
+    private Map<String, String> args = new HashMap<>();
 
     public F2FUriHolder(F2FUri fUri) {
         base = fUri.getUri().getScheme() + "://" + fUri.getUri().getAuthority();
@@ -45,11 +45,7 @@ public class F2FUriHolder {
         args.put(F2FUri.PAGE, fUri.hasPage() ? String.valueOf(fUri.getPage()) : UNSPECIFIED);
     }
 
-    public boolean hasArguments() {
-        return !(key.equals(UNSPECIFIED) && q.equals(UNSPECIFIED) && sort.equals(UNSPECIFIED)
-                && rId.equals(UNSPECIFIED) && page.equals(UNSPECIFIED));
-    }
-
+    //region Setters
     public void setKey(String key) {
         args.put(F2FUri.KEY, key);
     }
@@ -91,7 +87,14 @@ public class F2FUriHolder {
                 break;
         }
     }
+    //endregion
 
+    /**
+     * Checks if Uri contain query 'keyword'
+     * (e.g. http://site.com?q=smth&keyword=true&... has a 'keyword')
+     * @param keyword query keyword
+     * @return true if contains, false otherwise
+     */
     public boolean hasArgument(String keyword) {
         return args.containsKey(keyword) && !args.get(keyword).isEmpty();
     }

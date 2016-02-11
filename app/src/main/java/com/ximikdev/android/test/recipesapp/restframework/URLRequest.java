@@ -10,6 +10,9 @@ import java.net.URL;
  */
 public class URLRequest extends AsyncTask<URL, Void, Object> {
 
+    /**
+     * Listener to listen request will be completed
+     */
     public interface OnCompleteListener {
         void onRequestComplete(URL url, Object response);
     }
