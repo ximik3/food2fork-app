@@ -43,6 +43,7 @@ import com.ximikdev.android.test.recipesapp.provider.F2FUriHolder;
  * ContentProvider starts background service, update database with new data and
  * notify cursors when new data is available
  * <br/>
+ * <br/>
  * This is main launcher Activity with ListView to show recipes
  */
 public class MainActivity extends AppCompatActivity implements
