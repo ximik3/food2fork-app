@@ -18,6 +18,7 @@ public class StreamResponseHandler implements URLResponseHandler<File> {
 
     /**
      * Creates handler that save URL input stream into file
+     *
      * @param cacheDir file directory
      * @param fileName filename where to save request
      */
@@ -28,6 +29,7 @@ public class StreamResponseHandler implements URLResponseHandler<File> {
 
     /**
      * Opens URL stream and save binary data to file.
+     *
      * @param url request URL
      * @return file which contain request
      * @throws IOException

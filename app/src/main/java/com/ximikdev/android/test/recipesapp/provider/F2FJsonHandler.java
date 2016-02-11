@@ -24,6 +24,7 @@ public class F2FJsonHandler implements URLResponseHandler<List<ContentValues>> {
 
     /**
      * Create an instance of F2FImageHandler
+     *
      * @param stringHandler String handler
      * @see StringResponseHandler
      */
@@ -33,6 +34,7 @@ public class F2FJsonHandler implements URLResponseHandler<List<ContentValues>> {
 
     /**
      * Handle JSON request
+     *
      * @param url requested JSON URL
      * @return List of parsed JSON data
      * @throws IOException
@@ -57,8 +59,9 @@ public class F2FJsonHandler implements URLResponseHandler<List<ContentValues>> {
      * Analyse <code>recipes</code>
      * (<a href="http://food2fork.com/api/search">http://food2fork.com/api/search</a>)
      * JSON response and extract content
+     *
      * @param jsonString input JSON
-     * @param url needed to fill F2FTable.Q
+     * @param url        needed to fill F2FTable.Q
      * @return list of F2FTable rows
      * @throws JSONException
      */
@@ -102,7 +105,7 @@ public class F2FJsonHandler implements URLResponseHandler<List<ContentValues>> {
                                     : F2FTable.Q_RATING_POSITION,
                             F2FContentProvider.RESULTS_PER_PAGE * fUri.getPage()
                                     + (i + 1)   // current JSONArray starts with 0 but
-                                                // positions are positive
+                            // positions are positive
                     );
                 } else {    // default search call
                     newRow.put(trending
@@ -123,6 +126,7 @@ public class F2FJsonHandler implements URLResponseHandler<List<ContentValues>> {
      * Analyse <code>recipe</code>
      * (<a href="http://food2fork.com/api/get">http://food2fork.com/api/get</a>)
      * JSON response and extract content
+     *
      * @param jsonString input JSON
      * @return list of F2FTable rows
      * @throws JSONException

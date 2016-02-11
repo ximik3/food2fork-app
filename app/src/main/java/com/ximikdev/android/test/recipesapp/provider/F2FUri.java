@@ -6,6 +6,7 @@ import android.net.Uri;
  * Uri to access Food2Fork.com API
  * Content Provider's adaptation for URL queries.
  * It has the same syntax as the original API.
+ *
  * @see <a href="http://food2fork.com/about/api">food2fork.com/about/api</a>
  */
 public class F2FUri {
@@ -40,6 +41,7 @@ public class F2FUri {
 
     /**
      * Creates instance of F2FUri class from Uri
+     *
      * @param uri input Uri
      */
     public F2FUri(Uri uri) {
@@ -59,6 +61,7 @@ public class F2FUri {
 
     /**
      * Constructor helper. No exception String to int conversion
+     *
      * @param page numeric String
      * @return int
      */
@@ -72,6 +75,7 @@ public class F2FUri {
 
     /**
      * Creates instance of F2FUri class from String
+     *
      * @param uri input String
      */
     public F2FUri(String uri) {

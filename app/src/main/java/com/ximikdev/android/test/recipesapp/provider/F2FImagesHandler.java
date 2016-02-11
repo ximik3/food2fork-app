@@ -11,11 +11,12 @@ import java.net.URL;
  * Images loader
  * {@link StreamResponseHandler} wrapper
  */
-public class F2FImagesHandler implements URLResponseHandler<File>{
+public class F2FImagesHandler implements URLResponseHandler<File> {
     private File imagesDir;
 
     /**
      * Create an instance of F2FImageHandler
+     *
      * @param imagesDir images download directory
      */
     public F2FImagesHandler(File imagesDir) {
@@ -35,6 +36,7 @@ public class F2FImagesHandler implements URLResponseHandler<File>{
 
     /**
      * URL image filename picker. Pick everything after last '/' in URL
+     *
      * @param url image url
      * @return image name
      */

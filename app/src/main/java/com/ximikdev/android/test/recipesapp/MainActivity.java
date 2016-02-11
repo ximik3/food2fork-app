@@ -36,9 +36,9 @@ import com.ximikdev.android.test.recipesapp.provider.F2FUriHolder;
  * Food2Fork Recipes App is made on REST interaction pattern B modification
  * presented on Google I/O 2010. The idea is to connect to RESTful web services
  * via {@link android.content.ContentProvider} API, as they has similar CRUD interface.
- *
+ * <p/>
  * <p><b>Activity</b> -- <b>ContentProvider</b> -- <b>REST Web Service</b></p>
- *
+ * <p/>
  * Activity send queries to ContentProvider and get data available in database.
  * ContentProvider starts background service, update database with new data and
  * notify cursors when new data is available
@@ -140,13 +140,13 @@ public class MainActivity extends AppCompatActivity implements
                 this,                   // context
                 R.layout.item_layout,   // layout
                 null,                   // cursor (will be loaded later)
-                new String[] {          // from COLUMNS
+                new String[]{          // from COLUMNS
                         F2FTable.RECIPE_ID,
                         F2FTable.TITLE,
                         F2FTable.SOCIAL_RANK,
                         F2FTable.IMAGE_URI
                 },
-                new int[] {             // to VIEWS
+                new int[]{             // to VIEWS
                         R.id.item_recipe_id,
                         R.id.item_title,
                         R.id.item_rank,
@@ -173,9 +173,10 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Set toolbar according to searchIsActive value
+     *
      * @param toolbar
      */
-    private void checkToolbarSearch(boolean searchState, Toolbar toolbar){
+    private void checkToolbarSearch(boolean searchState, Toolbar toolbar) {
         if (!searchState) {
             toolbar.addView(searchInput);
             searchInput.requestFocus();
@@ -187,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Starts new activity to show recipe details
+     *
      * @param recipeId
      */
     private void showDetails(String recipeId) {
@@ -200,7 +202,8 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Initialize new loader to load {@link Cursor} data
-     * @param id loader id
+     *
+     * @param id  loader id
      * @param uri request Uri
      */
     private void initLoader(int id, String uri) {
@@ -211,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Restart previously initialized loader to load new data
-     * @param id loader id
+     *
+     * @param id  loader id
      * @param uri new request Uri
      */
     private void restartLoader(int id, String uri) {
@@ -238,11 +242,13 @@ public class MainActivity extends AppCompatActivity implements
                 F2FTable.IMAGE_URI},
                 null, null, null);
     }
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // set new cursor after loading
         adapter.changeCursor(data);
     }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // data is not available anymore, delete reference

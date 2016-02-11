@@ -14,8 +14,9 @@ import java.util.Map;
 public class F2FUriHolder {
     private static final String UNSPECIFIED = "";
 
-    public enum Action { SEARCH, GET }
-    public enum Order { RATING, TRENDING }
+    public enum Action {SEARCH, GET}
+
+    public enum Order {RATING, TRENDING}
 
     private String key;
     private String q;
@@ -60,9 +61,11 @@ public class F2FUriHolder {
 
     public void setSort(Order sort) {
         switch (sort) {
-            case RATING: args.put(F2FUri.SORT, F2FUri.RATING);
+            case RATING:
+                args.put(F2FUri.SORT, F2FUri.RATING);
                 break;
-            case TRENDING: args.put(F2FUri.SORT, F2FUri.TRENDING);
+            case TRENDING:
+                args.put(F2FUri.SORT, F2FUri.TRENDING);
                 break;
         }
     }
@@ -81,9 +84,11 @@ public class F2FUriHolder {
 
     public void setAction(Action action) {
         switch (action) {
-            case SEARCH: this.action = F2FUri.SEARCH;
+            case SEARCH:
+                this.action = F2FUri.SEARCH;
                 break;
-            case GET: this.action = F2FUri.GET;
+            case GET:
+                this.action = F2FUri.GET;
                 break;
         }
     }
@@ -92,18 +97,20 @@ public class F2FUriHolder {
     /**
      * Checks if Uri contain query 'keyword'
      * (e.g. http://site.com?q=smth&keyword=true&... has a 'keyword')
+     *
      * @param keyword query keyword
      * @return true if contains, false otherwise
      */
     public boolean hasArgument(String keyword) {
         return args.containsKey(keyword) && !args.get(keyword).isEmpty();
     }
+
     @Override
     public String toString() {
         String result = base + "/" + action;
 
         StringBuilder query = new StringBuilder();
-        for (String arg: args.keySet()) {
+        for (String arg : args.keySet()) {
             if (!args.get(arg).equals(UNSPECIFIED)) {
                 query.append(query.length() == 0 ? "?" : "&");
                 query.append(arg);
@@ -120,7 +127,8 @@ public class F2FUriHolder {
 
     /**
      * {@link Uri} to {@link URL} converter
-     * @param uri current Uri string (e.g. content://com.site.provider/search?q=work&r=20)
+     *
+     * @param uri     current Uri string (e.g. content://com.site.provider/search?q=work&r=20)
      * @param uriBase Uri basement (e.g. content://com.site.provider)
      * @param urlBase URL basement to replace (e.g. http://site.com)
      * @return URL similar to the input Uri (e.g. http://site.com/search?q=work&r=20)
@@ -135,7 +143,8 @@ public class F2FUriHolder {
 
     /**
      * {@link URL} to {@link Uri} converter
-     * @param url current URL string (e.g. http://site.com/search?q=work&r=20)
+     *
+     * @param url     current URL string (e.g. http://site.com/search?q=work&r=20)
      * @param urlBase URL basement (e.g. http://site.com)
      * @param uriBase Uri basement to replace (e.g. content://com.site.provider)
      * @return Uri similar to the input URL (e.g. content://com.site.provider/search?q=work&r=20)

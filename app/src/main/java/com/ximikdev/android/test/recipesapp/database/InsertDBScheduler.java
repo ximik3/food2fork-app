@@ -27,6 +27,7 @@ public abstract class InsertDBScheduler {
 
     /**
      * Creates an instance of {@link InsertDBScheduler}
+     *
      * @param database where to insert values
      */
     public InsertDBScheduler(SQLiteOpenHelper database) {
@@ -36,6 +37,7 @@ public abstract class InsertDBScheduler {
 
     /**
      * Creates an instance of {@link InsertDBScheduler}
+     *
      * @param database where to insert values
      * @param listener completion listener
      */
@@ -48,6 +50,7 @@ public abstract class InsertDBScheduler {
 
     /**
      * Insert list of {@link ContentValues} into database
+     *
      * @param list
      */
     public void insert(List<ContentValues> list) {
@@ -58,6 +61,7 @@ public abstract class InsertDBScheduler {
 
     /**
      * Adds single task to queue
+     *
      * @param row
      */
     void addTask(ContentValues row) {
@@ -70,6 +74,7 @@ public abstract class InsertDBScheduler {
 
     /**
      * Remove task from queue and notify if queue is empty
+     *
      * @param task
      */
     void removeTask(InsertTask task) {
@@ -101,6 +106,7 @@ public abstract class InsertDBScheduler {
 
     /**
      * Abstract insert method. Must be implemented by class which inherits this class.
+     *
      * @param values insert values
      * @return true is success or false
      */

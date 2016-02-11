@@ -23,7 +23,8 @@ public class URLRequest extends AsyncTask<URL, Void, Object> {
 
     /**
      * Async URL request task
-     * @param handler handler to handle result
+     *
+     * @param handler          handler to handle result
      * @param completeListener null if not specified
      */
     public URLRequest(URLResponseHandler handler, OnCompleteListener completeListener) {

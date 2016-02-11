@@ -74,6 +74,7 @@ public class F2FTable implements BaseColumns {
 
     /**
      * Table creation
+     *
      * @param database
      */
     public static void onCreate(SQLiteDatabase database) {
@@ -85,6 +86,7 @@ public class F2FTable implements BaseColumns {
 
     /**
      * Table re-creation during database version upgrade
+     *
      * @param database
      * @param oldVersion
      * @param newVersion
@@ -100,6 +102,7 @@ public class F2FTable implements BaseColumns {
 
     /**
      * Full table projection
+     *
      * @return array of column names
      */
     public static String[] availableColumns() {
@@ -110,6 +113,7 @@ public class F2FTable implements BaseColumns {
 
     /**
      * Check if table contains all requested columns
+     *
      * @param projection list of requested columns
      */
     public static void checkColumns(String[] projection) {

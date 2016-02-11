@@ -12,6 +12,7 @@ public class StringResponseHandler implements URLResponseHandler<String> {
 
     /**
      * Opens URL stream, reads data as symbols and save it to String
+     *
      * @param url request URL
      * @return result String
      * @throws IOException
@@ -25,8 +26,7 @@ public class StringResponseHandler implements URLResponseHandler<String> {
         StringBuilder builder = new StringBuilder();
         String line;
 
-        while((line = reader.readLine()) != null)
-        {
+        while ((line = reader.readLine()) != null) {
             builder.append(line);
             builder.append('\n');
         }

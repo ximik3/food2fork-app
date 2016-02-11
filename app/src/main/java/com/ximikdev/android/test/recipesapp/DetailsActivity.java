@@ -36,7 +36,7 @@ public class DetailsActivity extends AppCompatActivity {
             transaction.add(R.id.frame_layout,
                     DetailsActivityFragment.newInstance(bundle),
                     FRAGMENT_TAG
-                    );
+            );
         }
         transaction.commit();
 

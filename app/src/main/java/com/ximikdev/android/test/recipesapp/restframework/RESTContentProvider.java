@@ -1,9 +1,6 @@
 package com.ximikdev.android.test.recipesapp.restframework;
 
 import android.content.ContentProvider;
-import android.util.Log;
-
-import com.ximikdev.android.test.recipesapp.provider.F2FContentProvider;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -25,7 +22,8 @@ public abstract class RESTContentProvider extends ContentProvider implements
 
     /**
      * Instantiate new asynchronous task
-     * @param url url link
+     *
+     * @param url     url link
      * @param handler customize the way to handle requests
      * @return
      */
@@ -38,6 +36,7 @@ public abstract class RESTContentProvider extends ContentProvider implements
 
     /**
      * Add {@link URLRequest} to schedule. If exist ignore request.
+     *
      * @param url
      * @param handler
      */
@@ -54,6 +53,7 @@ public abstract class RESTContentProvider extends ContentProvider implements
 
     /**
      * Remove {@link URLRequest} from schedule.
+     *
      * @param url
      * @param response
      */

@@ -82,6 +82,7 @@ public class F2FContentProvider extends RESTContentProvider implements
 
     // Uri Matcher
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sURIMatcher.addURI(AUTHORITY, SEARCH_PATH, SEARCH_CASE);
         sURIMatcher.addURI(AUTHORITY, GET_PATH, GET_CASE);
@@ -112,7 +113,8 @@ public class F2FContentProvider extends RESTContentProvider implements
 
     /**
      * URL response listener
-     * @param url requested URL
+     *
+     * @param url      requested URL
      * @param response generic type URL response
      */
     @Override
@@ -146,7 +148,8 @@ public class F2FContentProvider extends RESTContentProvider implements
 
     /**
      * URL response listener helper method
-     * @param url image URL
+     *
+     * @param url      image URL
      * @param response downloaded file instance
      */
     private void insertImageUriIntoDb(URL url, File response) {
@@ -160,6 +163,7 @@ public class F2FContentProvider extends RESTContentProvider implements
 
     /**
      * Insertion complete listener
+     *
      * @param rowsAffected number of inserted and/or updated rows
      */
     @Override
@@ -173,11 +177,12 @@ public class F2FContentProvider extends RESTContentProvider implements
      * data in database. All results returned via {@link Cursor}. Than if network is available
      * it is downloading newer results and storing them to database. When request is completed
      * it is sending notification to {@link Cursor}, and force it to update its data.
-     * @param uri generic request Uri with query parameters, similar to REST URL.
-     * @param projection requested columns, null to return all available
-     * @param selection requested condition, can be null
+     *
+     * @param uri           generic request Uri with query parameters, similar to REST URL.
+     * @param projection    requested columns, null to return all available
+     * @param selection     requested condition, can be null
      * @param selectionArgs condition arguments, null if not specified in selection by '?' symbols
-     * @param sortOrder sorting order, null if default
+     * @param sortOrder     sorting order, null if default
      * @return cursor table filled with data
      */
     @Override
@@ -275,7 +280,7 @@ public class F2FContentProvider extends RESTContentProvider implements
                         inRange.append(c.getString(c.getColumnIndex(F2FTable._ID)));
                         inRange.append(',');
                     }
-                    inRange.deleteCharAt(inRange.length()-1);   //delete last comma
+                    inRange.deleteCharAt(inRange.length() - 1);   //delete last comma
                     inRange.append(')');    //add closing bracket
                     String range = inRange.toString();
                     Cursor m = db.query(F2FTable.NAME,
@@ -339,19 +344,21 @@ public class F2FContentProvider extends RESTContentProvider implements
     /**
      * Query method helper function. It checks difference between last data modification
      * and current time.
-     * @param modified last modification time in ms since Jan, 1970
+     *
+     * @param modified     last modification time in ms since Jan, 1970
      * @param updateTimeMs update interval
      * @return
      */
     private boolean needUpdate(long modified, long updateTimeMs) {
         long offset = new Date().getTime() - modified
                 - TimeZone.getDefault().getOffset(modified);
-        Log.i(_TAG, offset/1000 + " ms");
+        Log.i(_TAG, offset / 1000 + " ms");
         return offset > updateTimeMs;
     }
 
     /**
      * Internet access checker
+     *
      * @return true if internet connection is established
      */
     private boolean isOnline() {
@@ -363,6 +370,7 @@ public class F2FContentProvider extends RESTContentProvider implements
 
     /**
      * Images checker. Looking for IMAGE_URI missing fields and download data
+     *
      * @param db database to search in
      */
     private void loadImagesIfMissing(SQLiteDatabase db) {
@@ -387,9 +395,12 @@ public class F2FContentProvider extends RESTContentProvider implements
     @Override
     public String getType(Uri uri) {
         switch (sURIMatcher.match(uri)) {
-            case SEARCH_CASE:   return RECIPES_TYPE;
-            case GET_CASE:      return RECIPE_ITEM_TYPE;
-            default:            return null;
+            case SEARCH_CASE:
+                return RECIPES_TYPE;
+            case GET_CASE:
+                return RECIPE_ITEM_TYPE;
+            default:
+                return null;
         }
     }
 

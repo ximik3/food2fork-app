@@ -3,7 +3,6 @@ package com.ximikdev.android.test.recipesapp.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Foot2Fork database manager
@@ -21,6 +20,7 @@ public class F2FDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Tables creation during database creation process
+     *
      * @param db database
      */
     @Override

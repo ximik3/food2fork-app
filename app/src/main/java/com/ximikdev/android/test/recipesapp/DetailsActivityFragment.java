@@ -43,6 +43,7 @@ public class DetailsActivityFragment extends Fragment implements
 
     /**
      * Creates new instance of fragment as it is recommended to have empty franment constructor
+     *
      * @param bundle initialization arguments
      * @return new fragment
      */
@@ -57,7 +58,9 @@ public class DetailsActivityFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get recipe_id from Bundle
-        if (savedInstanceState == null) { savedInstanceState = getArguments(); }
+        if (savedInstanceState == null) {
+            savedInstanceState = getArguments();
+        }
         if (savedInstanceState != null) {
             recipe_id = savedInstanceState.getString(MainActivity.RECIPE_ID);
         }
@@ -71,6 +74,7 @@ public class DetailsActivityFragment extends Fragment implements
 
     /**
      * Initialize views
+     *
      * @see Fragment#onCreateView(LayoutInflater, ViewGroup, Bundle)
      */
     @Override
@@ -88,6 +92,7 @@ public class DetailsActivityFragment extends Fragment implements
 
     /**
      * Save current 'recipe_id' to outState bundle
+     *
      * @param outState
      */
     @Override
@@ -117,8 +122,9 @@ public class DetailsActivityFragment extends Fragment implements
 
     /**
      * Set loaded data to views
+     *
      * @param loader
-     * @param data loaded cursor
+     * @param data   loaded cursor
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -158,6 +164,7 @@ public class DetailsActivityFragment extends Fragment implements
             sourceUrl.append(sData.get(data.getColumnIndex(F2FTable.SOURCE_URL)));
         }
     }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
     }
