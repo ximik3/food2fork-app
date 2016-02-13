@@ -352,7 +352,7 @@ public class F2FContentProvider extends RESTContentProvider implements
     private boolean needUpdate(long modified, long updateTimeMs) {
         long offset = new Date().getTime() - modified
                 - TimeZone.getDefault().getOffset(modified);
-        Log.i(_TAG, offset / 1000 + " ms");
+//        Log.i(_TAG, offset / 1000 + " ms");
         return offset > updateTimeMs;
     }
 

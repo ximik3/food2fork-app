@@ -12,9 +12,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +31,8 @@ import com.ximikdev.android.test.recipesapp.database.F2FTable;
 import com.ximikdev.android.test.recipesapp.provider.F2FContentProvider;
 import com.ximikdev.android.test.recipesapp.provider.F2FUri;
 import com.ximikdev.android.test.recipesapp.provider.F2FUriHolder;
+
+import java.net.URLEncoder;
 
 /**
  * Food2Fork Recipes App is made on REST interaction pattern B modification
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements
         searchInput = new EditText(this);
         searchInput.setHint(R.string.search_hint);
         searchInput.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchInput.setInputType(InputType.TYPE_CLASS_TEXT);
         searchInput.setHintTextColor(ContextCompat.getColor(this, R.color.colorSearchHint));
         searchInput.setTextColor(ContextCompat.getColor(this, R.color.colorSearchText));
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
@@ -96,35 +99,23 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-        searchInput.addTextChangedListener(new TextWatcher() {
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int size = s.length();
-                if (size > 0 && s.charAt(size - 1) == '\n') { // Enter pressed
-                    s.replace(size - 1, size, "");
-                    String query = s.toString()
-                            .replace(" ", ",");
-                    queryUri.setQ(query);
-                    Log.i(_TAG, "enter");
-                    restartLoader(LOADER_RECIPES, queryUri.toString());
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performSearch(v.getText().toString());
+                    return true;
                 }
+                return false;
             }
         });
         //endregion
         //region fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkToolbarSearch(searchIsActive, toolbar);
+                checkSearch(searchIsActive, toolbar, fab);
                 searchIsActive = !searchIsActive;
             }
         });
@@ -173,17 +164,37 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
+     * Send search query to provider, and load results
+     *
+     * @param query search words
+     */
+    public void performSearch(String query) {
+        try {
+            String q = URLEncoder.encode(query.replace(' ', ','), "UTF-8");
+
+            queryUri.setAction(F2FUriHolder.Action.SEARCH);
+            queryUri.setQ(q);
+            restartLoader(LOADER_RECIPES, queryUri.toString());
+        } catch (Exception e) {
+            Log.e(_TAG, "Search query URL exception: " + e);
+        }
+    }
+
+    /**
      * Set toolbar according to searchIsActive value
      *
      * @param toolbar
      */
-    private void checkToolbarSearch(boolean searchState, Toolbar toolbar) {
+    private void checkSearch(boolean searchState, Toolbar toolbar, FloatingActionButton fab) {
         if (!searchState) {
             toolbar.addView(searchInput);
+            toolbar.findViewById(R.id.search_cancel);
             searchInput.requestFocus();
+            fab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         } else {
             searchInput.clearFocus();
             toolbar.removeView(searchInput);
+            fab.setImageResource(android.R.drawable.ic_menu_search);
         }
     }
 
