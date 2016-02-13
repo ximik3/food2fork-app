@@ -19,7 +19,7 @@ presented on Google I/O 2010 (https://www.youtube.com/watch?v=xHXn3Kg2IQE).
 
 ><p><b>Activity</b> <--> <b>ContentProvider</b> <--> <b>REST Web Service</b></p>
 
-The idea is to connect to RESTful web services via ContentProvider API, as they hassimilar CRUD interfaces.
+The idea is to connect to RESTful web services via ContentProvider API, as they has similar CRUD interfaces.
 Activity send queries to ContentProvider and get data available in database.
 ContentProvider starts background service, update database with new data and
 notify cursors when new data is available.
